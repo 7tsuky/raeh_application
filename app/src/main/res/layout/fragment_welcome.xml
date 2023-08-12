@@ -21,7 +21,7 @@
     <Button
         android:fontFamily="sans-serif-medium"
         android:padding="20sp"
-        android:id="@+id/button2"
+        android:id="@+id/welcomeStartButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"

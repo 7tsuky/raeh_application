@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/purple_200"
+    android:layout_marginTop="5sp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/item_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_margin="@dimen/text_margin"
+        android:padding="5sp"
+        android:text="Respuesta"
+        android:textSize="25sp"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+
+</LinearLayout>
