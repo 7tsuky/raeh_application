@@ -10,6 +10,8 @@ import androidx.navigation.Navigation
 
 class WelcomeFragment : Fragment() {
 
+    private lateinit var welcomeStartButton: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -17,8 +19,11 @@ class WelcomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_welcome, container, false)
 
-        view.findViewById<Button>(R.id.welcomeStartButton).setOnClickListener {Navigation.findNavController(view).navigate(R.id.action_welcomeFragment_to_itemSurveyFragment)}
-
+        welcomeStartButton = view.findViewById<Button>(R.id.welcomeStartButton)
+        welcomeStartButton.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_welcomeFragment_to_itemSurveyFragment)
+        }
+;
         return view
     }
 }

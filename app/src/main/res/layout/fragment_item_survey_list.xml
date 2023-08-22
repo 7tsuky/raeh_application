@@ -2,8 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:paddingHorizontal="10sp"
+    android:paddingVertical="5sp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".SurveyFragment">
 
 
     <TextView
@@ -12,35 +15,45 @@
         android:padding="5sp"
         android:layout_marginBottom="5sp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5sp"
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pregunta" />
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@id/surveyQuestionTextView"
-        android:layout_above="@id/surveyBackButton"
-        android:id="@+id/list"
+        android:layout_above="@id/surveyButtons"
+        android:id="@+id/surveyAnswersList"
         android:name="com.alejandro.raeh_app.itemSurveyFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".itemSurveyFragment"
+        tools:context=".SurveyFragment"
         tools:listitem="@layout/fragment_item_survey" />
 
-    <ImageButton
-        android:id="@+id/surveyBackButton"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:textSize="17sp"
-        android:padding="19sp"
-        android:layout_marginBottom="5sp"
-        android:layout_marginTop="5sp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:contentDescription="BackButton"
-        android:src="@android:drawable/ic_media_previous" />
+        android:id="@+id/surveyButtons"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5sp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/surveyBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/survey_back_button"
+            android:padding="20sp"
+            android:layout_marginEnd="100sp"
+            android:src="@android:drawable/ic_media_previous" />
+
+        <ImageButton
+            android:id="@+id/surveyCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/survey_close_button"
+            android:padding="20sp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+    </LinearLayout>
 </RelativeLayout>

@@ -5,41 +5,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 
-import com.alejandro.raeh_app.placeholder.PlaceholderContent.PlaceholderItem
 import com.alejandro.raeh_app.databinding.FragmentItemSurveyBinding
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class SurveyRecyclerViewAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<SurveyRecyclerViewAdapter.ViewHolder>() {
+    private val answers: List<String>
+) : RecyclerView.Adapter<SurveyRecyclerViewAdapter.AnswerViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
-            FragmentItemSurveyBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_item_survey, parent, false)
+        return AnswerViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+    override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
+        holder.bind(answers[position])
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = answers.size
 
-    inner class ViewHolder(binding: FragmentItemSurveyBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class AnswerViewHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
 
-        override fun toString(): String {
-            return "h"
+        private val answerTextView: TextView = view.findViewById(R.id.answerTextView)
+
+        fun bind(answer: String) {
+            answerTextView.text = answer;
+            answerTextView.setOnClickListener {
+                Toast.makeText(itemView.context, "Answer clicked", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
