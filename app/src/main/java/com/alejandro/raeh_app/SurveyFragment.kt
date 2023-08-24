@@ -10,16 +10,45 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.google.gson.Gson
+import java.io.IOException
+import java.nio.charset.Charset
 
 /**
  * A fragment representing a list of Items.
  */
 class SurveyFragment : Fragment() {
 
+    // Survey objects
+    data class Survey(
+        val nodes: List<Node>
+    )
+    data class Node(
+        val id: Int,
+        val type: String,
+        val value: String,
+        val children: List<Int>
+    )
+
+    // XML objects
     private lateinit var surveyQuestionTextView: TextView
     private lateinit var surveyAnswersList: RecyclerView
     private lateinit var surveyBackButton: ImageButton
     private lateinit var surveyCloseButton: ImageButton
+
+    // Members
+    private var currentNodeId = 0
+    private lateinit var surveyGraph: Survey
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val jsonMsg = loadJSONFile("survey.json")
+        if(jsonMsg != null){
+            surveyGraph = Gson().fromJson(jsonMsg, Survey::class.java)
+        } else {
+            return
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +61,7 @@ class SurveyFragment : Fragment() {
 
         // Configure RecyclerView Adapter
         surveyAnswersList = view.findViewById(R.id.surveyAnswersList)
-        surveyAnswersList.adapter = SurveyRecyclerViewAdapter(listOf("Lorem ipsum", "Dolor sit amet", "Consectetur adipiscing elit"))
+        updateSurvey()
 
         // Configure surveyBackButton
         surveyBackButton = view.findViewById(R.id.surveyBackButton)
@@ -49,4 +78,90 @@ class SurveyFragment : Fragment() {
         return view
     }
 
+    private fun loadJSONFile(path: String): String? {
+        var json: String? = null
+        try {
+            val inputStream = context?.assets?.open(path)
+            val size = inputStream?.available()
+            val buffer = ByteArray(size ?: 0)
+            inputStream?.read(buffer)
+            inputStream?.close()
+            json = String(buffer, Charset.defaultCharset())
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+            Toast.makeText(context, "Failed loading the JSON file", Toast.LENGTH_SHORT).show()
+            return null
+        }
+        return json
+    }
+
+    private fun updateSurvey(){
+        // Fade out
+        if (currentNodeId == -1){
+            Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
+        }
+        val currentNode = getCurrentNode()
+        surveyQuestionTextView.text = currentNode.value
+
+        val questionSets: Array<Node> = getNextSetOfAnswers()
+        surveyAnswersList.animate().alpha(0f).setDuration(200).withEndAction {
+            surveyAnswersList.adapter = SurveyRecyclerViewAdapter(questionSets)
+
+            // Fade in
+            surveyAnswersList.alpha = 0f
+            surveyAnswersList.animate().alpha(1f).duration = 200
+        }.start()
+    }
+
+    private fun getNextSetOfAnswers(): Array<Node> {
+        // Step 1: Retrieve the current node
+        val currentNode = getCurrentNode()
+
+        // Step 2: Retrieve the child node IDs
+        val childNodeIds = currentNode.children
+
+        // Step 3 & 4: For each child node ID, retrieve the corresponding node and extract its value
+        val answers = childNodeIds.map { childId ->
+            val childNode = surveyGraph.nodes.find { it.id == childId }
+                ?: throw IllegalStateException("Child node not found in survey graph.")
+            childNode
+        }
+
+        return answers.toTypedArray()
+    }
+
+    private fun getCurrentNode(): Node {
+        return surveyGraph.nodes.find { it.id == currentNodeId }
+            ?: throw IllegalStateException("Current node not found in survey graph.")
+    }
+
+    private inner class SurveyRecyclerViewAdapter(
+        private val answers: Array<Node>
+    ) : RecyclerView.Adapter<SurveyRecyclerViewAdapter.AnswerViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_item_survey, parent, false)
+            return AnswerViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
+            holder.bind(answers[position])
+        }
+
+        override fun getItemCount(): Int = answers.size
+
+        inner class AnswerViewHolder(view: View) :
+            RecyclerView.ViewHolder(view) {
+
+            private val answerTextView: TextView = view.findViewById(R.id.answerTextView)
+
+            fun bind(answer: Node) {
+                answerTextView.text = answer.value;
+                answerTextView.setOnClickListener {
+                    currentNodeId = if (answer.children.isNotEmpty()) answer.children[0] else -1
+                    updateSurvey()
+                }
+            }
+        }
+    }
 }

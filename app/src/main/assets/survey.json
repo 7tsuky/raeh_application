@@ -1,33 +1,51 @@
 {
   "nodes": [
     {
-      "id": 1,
+      "id": 0,
       "type": "question",
       "value": "Question 1",
-      "children": [0,1,2]
+      "children": [1,2,3]
+    },
+    {
+      "id": 1,
+      "type": "question",
+      "value": "Answer 1",
+      "children": [4]
     },
     {
       "id": 2,
       "type": "question",
-      "value": "Answer 1",
-      "children": [5]
+      "value": "Answer 2",
+      "children": [4]
     },
     {
       "id": 3,
       "type": "question",
-      "value": "Answer 1",
-      "children": [5]
+      "value": "Answer 3",
+      "children": [4]
     },
     {
       "id": 4,
       "type": "question",
-      "value": "Answer 1",
-      "children": [5]
+      "value": "Question 2",
+      "children": [5,6,7]
     },
     {
       "id": 5,
-      "type": "question",
-      "value": "Question 2",
+      "type": "answer",
+      "value": "Answer 2-1",
+      "children": []
+    },
+    {
+      "id": 6,
+      "type": "answer",
+      "value": "Answer 2-2",
+      "children": []
+    },
+    {
+      "id": 7,
+      "type": "answer",
+      "value": "Answer 2-3",
       "children": []
     }
   ]
