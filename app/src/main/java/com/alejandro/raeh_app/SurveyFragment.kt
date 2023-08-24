@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.compose.runtime.collection.mutableVectorOf
+import androidx.core.os.trace
 import androidx.navigation.Navigation
 import com.google.gson.Gson
 import java.io.IOException
 import java.nio.charset.Charset
+import java.util.Vector
 
 /**
  * A fragment representing a list of Items.
@@ -35,10 +38,12 @@ class SurveyFragment : Fragment() {
     private lateinit var surveyAnswersList: RecyclerView
     private lateinit var surveyBackButton: ImageButton
     private lateinit var surveyCloseButton: ImageButton
+    private lateinit var viewOfLayout: View
 
     // Members
-    private var currentNodeId = 0
     private lateinit var surveyGraph: Survey
+    private var traceQuestionNodeIds: Vector<Int> = Vector<Int>()
+    private var finishedSurvey = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,34 +53,35 @@ class SurveyFragment : Fragment() {
         } else {
             return
         }
+        traceQuestionNodeIds.addAll(arrayOf(-1, 0))
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_item_survey_list, container, false)
+        viewOfLayout = inflater.inflate(R.layout.fragment_item_survey_list, container, false)
 
         // Configure surveyQuestionTextView
-        surveyQuestionTextView = view.findViewById(R.id.surveyQuestionTextView)
+        surveyQuestionTextView = viewOfLayout.findViewById(R.id.surveyQuestionTextView)
 
         // Configure RecyclerView Adapter
-        surveyAnswersList = view.findViewById(R.id.surveyAnswersList)
+        surveyAnswersList = viewOfLayout.findViewById(R.id.surveyAnswersList)
         updateSurvey()
 
         // Configure surveyBackButton
-        surveyBackButton = view.findViewById(R.id.surveyBackButton)
+        surveyBackButton = viewOfLayout.findViewById(R.id.surveyBackButton)
         surveyBackButton.setOnClickListener {
-            Toast.makeText(context, "Back button clicked", Toast.LENGTH_SHORT).show()
+            returnToLastQuestion();
         }
 
         // Configure surveyCloseButton
-        surveyCloseButton = view.findViewById(R.id.surveyCloseButton)
+        surveyCloseButton = viewOfLayout.findViewById(R.id.surveyCloseButton)
         surveyCloseButton.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_itemSurveyFragment_to_welcomeFragment)
+            Navigation.findNavController(viewOfLayout).navigate(R.id.action_itemSurveyFragment_to_welcomeFragment)
         }
 
-        return view
+        return viewOfLayout
     }
 
     private fun loadJSONFile(path: String): String? {
@@ -95,10 +101,21 @@ class SurveyFragment : Fragment() {
         return json
     }
 
+    private fun returnToLastQuestion(){
+        if (traceQuestionNodeIds.elementAt(traceQuestionNodeIds.size - 2) == -1) {
+            Navigation.findNavController(viewOfLayout).navigate(R.id.action_itemSurveyFragment_to_welcomeFragment)
+            return
+        }
+        finishedSurvey = false
+        traceQuestionNodeIds.removeLast()
+        updateSurvey()
+    }
+
     private fun updateSurvey(){
         // Fade out
-        if (currentNodeId == -1){
+        if (finishedSurvey){
             Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
+            return
         }
         val currentNode = getCurrentNode()
         surveyQuestionTextView.text = currentNode.value
@@ -131,7 +148,7 @@ class SurveyFragment : Fragment() {
     }
 
     private fun getCurrentNode(): Node {
-        return surveyGraph.nodes.find { it.id == currentNodeId }
+        return surveyGraph.nodes.find { it.id == traceQuestionNodeIds.lastElement() }
             ?: throw IllegalStateException("Current node not found in survey graph.")
     }
 
@@ -158,7 +175,10 @@ class SurveyFragment : Fragment() {
             fun bind(answer: Node) {
                 answerTextView.text = answer.value;
                 answerTextView.setOnClickListener {
-                    currentNodeId = if (answer.children.isNotEmpty()) answer.children[0] else -1
+                    finishedSurvey = answer.children.isEmpty()
+                    if (!finishedSurvey){
+                        traceQuestionNodeIds.add(answer.children[0])
+                    }
                     updateSurvey()
                 }
             }
