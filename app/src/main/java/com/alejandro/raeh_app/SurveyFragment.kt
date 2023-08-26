@@ -116,7 +116,8 @@ class SurveyFragment : Fragment() {
     private fun updateSurvey(){
         // Fade out
         if (finishedSurvey){
-            Navigation.findNavController(viewOfLayout).navigate(R.id.action_itemSurveyFragment_to_chatgptFragment)
+            val action= SurveyFragmentDirections.actionItemSurveyFragmentToChatgptFragment(traceNodeIds.toIntArray())
+            Navigation.findNavController(viewOfLayout).navigate(action)
             return
         }
         val currentNode = getCurrentNode()

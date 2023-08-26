@@ -36,7 +36,9 @@
         android:id="@+id/chatgptFragment"
         android:name="com.alejandro.raeh_app.ChatgptFragment"
         android:label="fragment_chatgpt"
-        tools:layout="@layout/fragment_chatgpt" >
-        <argument android:name="preguntas" />
+        tools:layout="@layout/fragment_chatgpt" > />
+        <argument
+            android:name="surveyContext"
+            app:argType="integer[]" />
     </fragment>
 </navigation>
