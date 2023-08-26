@@ -3,49 +3,180 @@
     {
       "id": 0,
       "type": "question",
-      "value": "Question 1",
-      "children": [1,2,3]
+      "value": "¿Qué edad tiene?",
+      "children": [1,2,3,4]
     },
     {
       "id": 1,
-      "type": "question",
-      "value": "Answer 1-1",
-      "children": [4]
+      "type": "answer",
+      "value": "3-5 años",
+      "children": [5]
     },
     {
       "id": 2,
-      "type": "question",
-      "value": "Answer 1-2",
-      "children": [4]
+      "type": "answer",
+      "value": "6-10 años",
+      "children": [6]
     },
     {
       "id": 3,
-      "type": "question",
-      "value": "Answer 1-3",
-      "children": [4]
+      "type": "answer",
+      "value": "11-13 años",
+      "children": [6]
     },
     {
       "id": 4,
-      "type": "question",
-      "value": "Question 2",
-      "children": [5,6,7]
+      "type": "answer",
+      "value": "14-18 años",
+      "children": [6]
     },
     {
       "id": 5,
-      "type": "answer",
-      "value": "Answer 2-1",
-      "children": []
+      "type": "question",
+      "value": "¿Está experimentando alguno de los siguientes síntomas?",
+      "children": [8,9,10,11]
     },
     {
       "id": 6,
+      "type": "question",
+      "value": "¿Siente alguno de los siguientes síntomas?",
+      "children": [8,9,10,11,12]
+    },
+    {
+      "id": 8,
       "type": "answer",
-      "value": "Answer 2-2",
+      "value": "Fiebre",
+      "children": [14]
+    },
+    {
+      "id": 9,
+      "type": "answer",
+      "value": "Tos",
+      "children": [18]
+    },
+    {
+      "id": 10,
+      "type": "answer",
+      "value": "Dolor de estómago",
+      "children": [25]
+    },
+    {
+      "id": 11,
+      "type": "answer",
+      "value": "Dolor de cabeza",
+      "children": [21]
+    },
+    {
+      "id": 12,
+      "type": "answer",
+      "value": "Dolor de garganta",
+      "children": [28]
+    },
+    {
+      "id": 14,
+      "type": "question",
+      "value": "¿Cuál es el nivel de fiebre?",
+      "children": [15,16,17]
+
+    },
+    {
+      "id": 15,
+      "type": "answer",
+      "value": "Leve (inferior a 38°C / 100,4°F)",
       "children": []
     },
     {
-      "id": 7,
+      "id": 16,
       "type": "answer",
-      "value": "Answer 2-3",
+      "value": "Moderada (100,4-102,2°F / 38-39°C)",
+      "children": []
+    },
+    {
+      "id": 17,
+      "type": "answer",
+      "value": " Alta (más de 102,2°F / 39°C)",
+      "children": []
+    },
+    {
+      "id": 18,
+      "type": "question",
+      "value": "¿La tos es seca o productiva (con mucosidad)?",
+      "children": [19,20]
+
+    },
+    {
+      "id": 19,
+      "type": "answer",
+      "value": "Tos seca",
+      "children": []
+    },
+    {
+      "id": 20,
+      "type": "answer",
+      "value": "Tos productiva",
+      "children": []
+    },
+    {
+      "id": 21,
+      "type": "question",
+      "value": "¿Dónde se localiza el dolor de cabeza?",
+      "children": [22,23,24]
+
+    },
+    {
+      "id": 22,
+      "type": "answer",
+      "value": "Frente",
+      "children": []
+    },
+    {
+      "id": 23,
+      "type": "answer",
+      "value": "Lados de la cabeza",
+      "children": []
+    },
+    {
+      "id": 24,
+      "type": "answer",
+      "value": "Parte posterior de la cabeza",
+      "children": []
+    },
+    {
+      "id": 25,
+      "type": "question",
+      "value": " ¿El dolor de estómago va acompañado de vómitos o náuseas?",
+      "children": [26,27]
+
+    },
+    {
+      "id": 26,
+      "type": "answer",
+      "value": "Si",
+      "children": []
+    },
+    {
+      "id": 27,
+      "type": "answer",
+      "value": "No",
+      "children": []
+    },
+    {
+      "id": 28,
+      "type": "question",
+      "value": " ¿Le duele o le pica la garganta?",
+      "children": [29,30]
+
+    },
+    {
+      "id": 29,
+      "type": "answer",
+      "value": "Dolor",
+      "children": []
+    },
+    {
+      "id": 30,
+      "type": "answer",
+      "value": "Rasposa",
       "children": []
     }
   ]
