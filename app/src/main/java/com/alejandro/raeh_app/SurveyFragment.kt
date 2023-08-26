@@ -44,6 +44,7 @@ class SurveyFragment : Fragment() {
     private lateinit var surveyGraph: Survey
     private var traceQuestionNodeIds: Vector<Int> = Vector<Int>()
     private var finishedSurvey = false
+    private var traceNodeIds: Vector<Int> = Vector<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,7 @@ class SurveyFragment : Fragment() {
             return
         }
         traceQuestionNodeIds.addAll(arrayOf(-1, 0))
+        traceNodeIds.addAll(arrayOf(0))
     }
 
     override fun onCreateView(
@@ -114,7 +116,7 @@ class SurveyFragment : Fragment() {
     private fun updateSurvey(){
         // Fade out
         if (finishedSurvey){
-            Toast.makeText(context, "Finished", Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(viewOfLayout).navigate(R.id.action_itemSurveyFragment_to_chatgptFragment)
             return
         }
         val currentNode = getCurrentNode()
@@ -178,6 +180,8 @@ class SurveyFragment : Fragment() {
                     finishedSurvey = answer.children.isEmpty()
                     if (!finishedSurvey){
                         traceQuestionNodeIds.add(answer.children[0])
+                        traceNodeIds.add(answer.id)
+                        traceNodeIds.add(answer.children[0])
                     }
                     updateSurvey()
                 }

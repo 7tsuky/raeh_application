@@ -3,4 +3,6 @@
     <string name="welcome_button">Iniciar</string>
     <string name="survey_close_button">Cerrar Questionario</string>
     <string name="survey_back_button">Pregunta anterior</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="chatgpt_loading">Procesando los sintomas.</string>
 </resources>
