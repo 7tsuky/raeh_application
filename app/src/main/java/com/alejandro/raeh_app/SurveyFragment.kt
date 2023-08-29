@@ -87,20 +87,18 @@ class SurveyFragment : Fragment() {
     }
 
     private fun loadJSONFile(path: String): String? {
-        var json: String? = null
         try {
             val inputStream = context?.assets?.open(path)
             val size = inputStream?.available()
             val buffer = ByteArray(size ?: 0)
             inputStream?.read(buffer)
             inputStream?.close()
-            json = String(buffer, Charset.defaultCharset())
+            return String(buffer, Charset.defaultCharset())
         } catch (ex: IOException) {
             ex.printStackTrace()
             Toast.makeText(context, "Failed loading the JSON file", Toast.LENGTH_SHORT).show()
             return null
         }
-        return json
     }
 
     private fun returnToLastQuestion(){
