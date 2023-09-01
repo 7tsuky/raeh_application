@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
@@ -30,6 +31,10 @@ class ChatgptFragment : Fragment() {
     private lateinit var surveyGraph: SurveyFragment.Survey
     private lateinit var propmtChatGpt: List<ChatGPTMessage>
     private lateinit var retrofit: Retrofit
+
+    // XML
+    private lateinit var chatgptSpinnerContainer: RelativeLayout
+    private lateinit var chatgptErrorContainer: RelativeLayout
 
     // Args
     val args: ChatgptFragmentArgs by navArgs()
@@ -64,19 +69,22 @@ class ChatgptFragment : Fragment() {
         /// Create thread and call aip
         var view = inflater.inflate(R.layout.fragment_chatgpt, container, false)
 
+        chatgptSpinnerContainer = view.findViewById<RelativeLayout>(R.id.chatgptSpinnerContainer)
+        chatgptErrorContainer = view.findViewById<RelativeLayout>(R.id.chatgptErrorContainer)
+
         val service = retrofit.create(ChatGPTService::class.java)
         val requestCompletion = ChatGPTRequest("gpt-3.5-turbo", propmtChatGpt, 0.0)
 
         service.getCompletion(CHAT_GPT_API_KEY, requestCompletion).enqueue(object : Callback<ChatGPTResponse> {
             override fun onResponse(call: Call<ChatGPTResponse>, response: Response<ChatGPTResponse>) {
                 if (response.isSuccessful) {
-                    callbackAPIRequest(response.body())
+                    callbackAPISucceeded(response.body())
                 } else {
-                    Toast.makeText(context, "API request failed.", Toast.LENGTH_SHORT).show()
+                    callbackAPIFailed()
                 }
             }
             override fun onFailure(call: Call<ChatGPTResponse>, t: Throwable) {
-                Toast.makeText(context, "Error making API request.", Toast.LENGTH_SHORT).show()
+                callbackAPIFailed()
             }
         })
 
@@ -84,8 +92,18 @@ class ChatgptFragment : Fragment() {
         return view
     }
 
-    private fun callbackAPIRequest(response: ChatGPTResponse?){
+    private fun callbackAPISucceeded(response: ChatGPTResponse?){
         Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun callbackAPIFailed(){
+        chatgptSpinnerContainer.animate().alpha(0f).setDuration(200).withEndAction {
+            chatgptSpinnerContainer.visibility = View.GONE
+
+            chatgptErrorContainer.alpha = 0f
+            chatgptErrorContainer.visibility = View.VISIBLE
+            chatgptErrorContainer.animate().alpha(1f).duration = 200
+        }.start()
     }
 
     private fun loadJSONFile(path: String): String? {

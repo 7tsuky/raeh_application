@@ -6,15 +6,15 @@
     tools:context=".ChatgptFragment"
     android:background="@color/purple_200">
 
-  <RelativeLayout
+    <RelativeLayout
+      android:id="@+id/chatgptSpinnerContainer"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
       android:layout_centerVertical="true"
-      android:paddingBottom="5sp"
->
+      android:paddingBottom="5sp">
       <TextView
-          android:id="@+id/chatgptTextView"
+          android:id="@+id/chatgptLoadingTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/chatgpt_loading"
@@ -25,7 +25,7 @@
 
       <ProgressBar
           android:id="@+id/chatgptProgressBar"
-          android:layout_below="@id/chatgptTextView"
+          android:layout_below="@id/chatgptLoadingTextView"
           style="?android:attr/progressBarStyleLarge"
           android:layout_width="wrap_content"
           android:layout_centerHorizontal="true"
@@ -34,5 +34,26 @@
           android:layout_marginTop="60sp">
 
       </ProgressBar>
-  </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/chatgptErrorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:paddingBottom="5sp">
+
+        <TextView
+            android:id="@+id/chatgptErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chatgpt_error"
+            android:layout_centerHorizontal="true"
+            android:textSize="30sp"
+            android:textColor="@color/white"
+            />
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -4,6 +4,7 @@
     <string name="survey_close_button">Cerrar Questionario</string>
     <string name="survey_back_button">Pregunta anterior</string>
     <string name="chatgpt_loading">Procesando los sintomas.</string>
+    <string name="chatgpt_error">Error procesando sintomas.</string>
     <string name="chatgpt_base_url">https://api.openai.com</string>
     <string name="chatgpt_api_key">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</string>
 </resources>
