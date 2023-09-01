@@ -56,4 +56,21 @@
             />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/chatgptHTMLContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:layout_margin="50sp"
+        android:padding="5sp">
+
+        <WebView
+            android:id="@+id/chatgptHTMLOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 </RelativeLayout>
