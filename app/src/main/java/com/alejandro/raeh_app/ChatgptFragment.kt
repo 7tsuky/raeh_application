@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -117,7 +118,7 @@ class ChatgptFragment : Fragment() {
 
     private fun callbackAPISucceeded(response: ChatGPTResponse?){
         val unencodedHtml =
-            "<html><body>${response?.response}</body></html>";
+            "<html><body>${response?.choices?.get(0)?.message?.content}</body></html>";
         val encodedHtml = Base64.encodeToString(unencodedHtml.toByteArray(), Base64.NO_PADDING)
         chatgptHTMLOutput.loadData(encodedHtml, "text/html", "base64")
 
@@ -193,7 +194,29 @@ class ChatgptFragment : Fragment() {
     )
 
     data class ChatGPTResponse(
-        val response: String
+        val id: String,
+        @SerializedName("object") val objectType: String,
+        val created: Int,
+        val model: String,
+        val choices: List<Choice>,
+        val usage: Usage
+    )
+
+    data class Choice(
+        val index: Int,
+        val message: Message,
+        val finish_reason: String
+    )
+
+    data class Message(
+        val role: String,
+        val content: String
+    )
+
+    data class Usage(
+        val prompt_tokens: Int,
+        val completion_tokens: Int,
+        val total_tokens: Int
     )
 
     interface ChatGPTService {
