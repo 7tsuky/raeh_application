@@ -2,15 +2,18 @@ package com.alejandro.raeh_app
 
 import android.os.Bundle
 import android.util.Base64
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +26,8 @@ import retrofit2.http.POST
 import java.io.IOException
 import java.nio.charset.Charset
 import java.util.Vector
+import java.util.concurrent.TimeUnit
+
 
 class ChatgptFragment : Fragment() {
 
@@ -40,6 +45,7 @@ class ChatgptFragment : Fragment() {
     private lateinit var chatgptErrorContainer: RelativeLayout
     private lateinit var chatgptHTMLContainer: RelativeLayout
     private lateinit var chatgptHTMLOutput: WebView
+    private lateinit var chatGPTButtonFinish: Button
 
     // Args
     val args: ChatgptFragmentArgs by navArgs()
@@ -61,7 +67,13 @@ class ChatgptFragment : Fragment() {
         var context: Array<Int> = args.surveyContext.toTypedArray()
         propmtChatGpt = assemblePrompt(context)
 
-        retrofit = Retrofit.Builder()
+        val httpClientBuilder = OkHttpClient.Builder()
+        httpClientBuilder.connectTimeout(60, TimeUnit.SECONDS) // Set the connect timeout
+        httpClientBuilder.readTimeout(60, TimeUnit.SECONDS) // Set the read timeout
+        httpClientBuilder.writeTimeout(60, TimeUnit.SECONDS) // Set the write timeout
+        var client: OkHttpClient = httpClientBuilder.build()
+
+        retrofit = Retrofit.Builder().client(client)
             .baseUrl(CHAT_GPT_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -78,37 +90,20 @@ class ChatgptFragment : Fragment() {
         chatgptErrorContainer = view.findViewById<RelativeLayout>(R.id.chatgptErrorContainer)
         chatgptHTMLContainer = view.findViewById<RelativeLayout>(R.id.chatgptHTMLContainer)
         chatgptHTMLOutput = view.findViewById<WebView>(R.id.chatgptHTMLOutput)
+        chatGPTButtonFinish = view.findViewById<Button>(R.id.chatGPTButtonFinish)
+        chatGPTButtonFinish.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.action_chatgptFragment_to_welcomeFragment)
+        }
 
         val service = retrofit.create(ChatGPTService::class.java)
-        val requestCompletion = ChatGPTRequest("gpt-3.5-turbo", propmtChatGpt, 0.0)
+        val requestCompletion = ChatGPTRequest(model="gpt-3.5-turbo", messages=propmtChatGpt, temperature=0.0)
 
         service.getCompletion(CHAT_GPT_API_KEY, requestCompletion).enqueue(object : Callback<ChatGPTResponse> {
             override fun onResponse(call: Call<ChatGPTResponse>, response: Response<ChatGPTResponse>) {
                 if (response.isSuccessful) {
                     callbackAPISucceeded(response.body())
                 } else {
-                    var html = "<h1>Reporte de Atención al Estudiante</h1>\n" +
-                            "    <h2>Información del Estudiante</h2>\n" +
-                            "    <ul>\n" +
-                            "        <li>Edad: 11-13 años</li>\n" +
-                            "    </ul>\n" +
-                            "    <h2>Síntomas reportados</h2>\n" +
-                            "    <ul>\n" +
-                            "        <li>Tos productiva</li>\n" +
-                            "    </ul>\n" +
-                            "    <h2>Diagnóstico</h2>\n" +
-                            "    <p>El estudiante presenta una tos productiva.</p>\n" +
-                            "    <h2>Tratamiento</h2>\n" +
-                            "    <p>Se recomienda al estudiante:</p>\n" +
-                            "    <ol>\n" +
-                            "        <li>Tomar abundante líquido para mantenerse hidratado.</li>\n" +
-                            "        <li>Descansar adecuadamente.</li>\n" +
-                            "        <li>Evitar cambios bruscos de temperatura y ambientes con mucho polvo.</li>\n" +
-                            "        <li>Utilizar medicamentos para el alivio de la tos (bajo la supervisión de un adulto).</li>\n" +
-                            "    </ol>"
-
-                    callbackAPISucceeded(ChatGPTResponse(html))
-                    //callbackAPIFailed()
+                    callbackAPIFailed()
                 }
             }
             override fun onFailure(call: Call<ChatGPTResponse>, t: Throwable) {
@@ -192,7 +187,7 @@ class ChatgptFragment : Fragment() {
     )
 
     data class ChatGPTRequest(
-        val Model: String,
+        val model: String,
         val messages: List<ChatGPTMessage>,
         val temperature: Double
     )

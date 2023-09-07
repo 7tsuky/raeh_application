@@ -64,13 +64,37 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="invisible"
-        android:layout_margin="50sp"
-        android:padding="5sp">
+        android:layout_margin="30sp"
+        android:padding="0sp">
+        <TextView
+            android:id="@+id/chatGPTTitle"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:text="@string/chatgpt_title"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"/>
 
         <WebView
             android:id="@+id/chatgptHTMLOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20sp"
+            android:layout_below="@id/chatGPTTitle"
+            android:layout_marginTop="20sp"
+            android:layout_above="@id/chatGPTButtonFinish"/>
+
+        <Button
+            android:id="@+id/chatGPTButtonFinish"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/chatgpt_button_finish"
+            android:textSize="20sp"
+            android:layout_alignParentBottom="true"
+            />
 
     </RelativeLayout>
 </RelativeLayout>
