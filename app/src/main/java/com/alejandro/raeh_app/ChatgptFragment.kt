@@ -157,20 +157,22 @@ class ChatgptFragment : Fragment() {
     }
 
     private fun assemblePrompt(context: Array<Int>): List<ChatGPTMessage> {
-        var surveyMessage: String = ""
-        for (id in context){
-            var node = getNodeById(id)
-            surveyMessage += if (node.type == "question") "[Pregunta] " else "[Respuesta] "
-            surveyMessage += node.value + " -> "
-        }
-
         var messages: Vector<ChatGPTMessage> = Vector<ChatGPTMessage>()
 
         messages.add(ChatGPTMessage("system", resources.getString(R.string.chatgpt_role_system)))
         messages.add(ChatGPTMessage("assistant", resources.getString(R.string.chatgpt_role_assistance_1)))
         messages.add(ChatGPTMessage("user", resources.getString(R.string.chatgpt_role_user_1)))
         messages.add(ChatGPTMessage("assistant", resources.getString(R.string.chatgpt_role_assistance_2)))
-        messages.add(ChatGPTMessage("user", surveyMessage))
+
+        for (id in context){
+            var node = getNodeById(id)
+            var role = "assistant"
+            if(node.type == "answer"){
+                role = "user"
+            }
+            var surveyMessage = "(Conversación) " + node.value
+            messages.add(ChatGPTMessage(role, surveyMessage))
+        }
         messages.add(ChatGPTMessage("assistant", resources.getString(R.string.chatgpt_role_assistance_3)))
         messages.add(ChatGPTMessage("user", resources.getString(R.string.chatgpt_role_user_instruction)))
 
