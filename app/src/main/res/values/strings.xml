@@ -6,7 +6,7 @@
     <string name="chatgpt_loading">Procesando los sintomas.</string>
     <string name="chatgpt_error">Error procesando sintomas.</string>
     <string name="chatgpt_base_url">https://api.openai.com</string>
-    <string name="chatgpt_api_key">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</string>
+    <string name="chatgpt_api_key">TOKEN</string>
     <string name="chatgpt_role_system">
         Eres un asistente de enfermería encargado de atender estudiantes de 8 a 18 años de un colegio.
         Tu labor consiste en ayudar a gestionar la atención de estudiantes enfermos, diagnosticar posibles afecciones que puedan tener y redactar reportes claros y estructurados para el área de enfermería y los padres.
